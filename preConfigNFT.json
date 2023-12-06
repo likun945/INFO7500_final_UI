@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "QBToken",
+        "tag": "QBT",
+        "contract_address": "0xEC1fbD2a33b3a6be983e0209dA7e14b28454575c"
+    },
+    {
+        "id": 2,
+        "name": "BoardgameToken",
+        "tag": "BGT",
+        "contract_address": "0x8960CF2607ebcE52129ea0915406dC891310d40b"
+    }
+]
