@@ -240,6 +240,7 @@ const AuctionForm = () => {
                 </Form.Item>
                 <Form.Item name="revealPeriod" label="Reveal Period" rules={[{ required: true }]}>
                     <Select placeholder="Select reveal period">
+                        <Option value={60}>60 seconds(for testing)</Option>
                         <Option value={daysToTimestamp(3)}>3 Days</Option>
                         <Option value={daysToTimestamp(7)}>7 Days</Option>
                     </Select>

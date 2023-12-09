@@ -2404,6 +2404,38 @@ export const tokenizedVickeryAuctionABI = [
     ],
   },
   {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getEndedAuctions',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct TokenizedVickeryAuction.Auction[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'seller', internalType: 'address', type: 'address' },
+          { name: 'startTime', internalType: 'uint32', type: 'uint32' },
+          {
+            name: 'endOfBiddingPeriod',
+            internalType: 'uint32',
+            type: 'uint32',
+          },
+          { name: 'endOfRevealPeriod', internalType: 'uint32', type: 'uint32' },
+          { name: 'numBids', internalType: 'uint64', type: 'uint64' },
+          { name: 'highestBid', internalType: 'uint96', type: 'uint96' },
+          { name: 'secondHighestBid', internalType: 'uint96', type: 'uint96' },
+          { name: 'highestBidder', internalType: 'address', type: 'address' },
+          { name: 'index', internalType: 'uint64', type: 'uint64' },
+          { name: 'erc20Token', internalType: 'address', type: 'address' },
+          { name: 'reservePrice', internalType: 'uint96', type: 'uint96' },
+          { name: 'nftType', internalType: 'address', type: 'address' },
+          { name: 'nftId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
+    ],
+  },
+  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [],
@@ -2470,6 +2502,55 @@ export const tokenizedVickeryAuctionV2ABI = [
       },
     ],
     name: 'AuctionEnded',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'commitment',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'calculatedCommitment',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+      {
+        name: 'nonce',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+      {
+        name: 'bidValue',
+        internalType: 'uint96',
+        type: 'uint96',
+        indexed: false,
+      },
+      {
+        name: 'tokenContract',
+        internalType: 'address',
+        type: 'address',
+        indexed: false,
+      },
+      {
+        name: 'tokenId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'auctionIndex',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'BidDetails',
   },
   {
     type: 'event',
@@ -2667,6 +2748,38 @@ export const tokenizedVickeryAuctionV2ABI = [
     outputs: [
       { name: 'commitment', internalType: 'bytes20', type: 'bytes20' },
       { name: 'collateral', internalType: 'uint96', type: 'uint96' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getEndedAuctions',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct TokenizedVickeryAuction.Auction[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'seller', internalType: 'address', type: 'address' },
+          { name: 'startTime', internalType: 'uint32', type: 'uint32' },
+          {
+            name: 'endOfBiddingPeriod',
+            internalType: 'uint32',
+            type: 'uint32',
+          },
+          { name: 'endOfRevealPeriod', internalType: 'uint32', type: 'uint32' },
+          { name: 'numBids', internalType: 'uint64', type: 'uint64' },
+          { name: 'highestBid', internalType: 'uint96', type: 'uint96' },
+          { name: 'secondHighestBid', internalType: 'uint96', type: 'uint96' },
+          { name: 'highestBidder', internalType: 'address', type: 'address' },
+          { name: 'index', internalType: 'uint64', type: 'uint64' },
+          { name: 'erc20Token', internalType: 'address', type: 'address' },
+          { name: 'reservePrice', internalType: 'uint96', type: 'uint96' },
+          { name: 'nftType', internalType: 'address', type: 'address' },
+          { name: 'nftId', internalType: 'uint256', type: 'uint256' },
+        ],
+      },
     ],
   },
   {
@@ -9136,6 +9249,36 @@ export function useTokenizedVickeryAuctionGetBid<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenizedVickeryAuctionABI}__ and `functionName` set to `"getEndedAuctions"`.
+ */
+export function useTokenizedVickeryAuctionGetEndedAuctions<
+  TFunctionName extends 'getEndedAuctions',
+  TSelectData = ReadContractResult<
+    typeof tokenizedVickeryAuctionABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenizedVickeryAuctionABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenizedVickeryAuctionABI,
+    functionName: 'getEndedAuctions',
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenizedVickeryAuctionABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenizedVickeryAuctionABI}__.
  */
 export function useTokenizedVickeryAuctionWrite<
@@ -9791,6 +9934,36 @@ export function useTokenizedVickeryAuctionV2GetBid<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenizedVickeryAuctionV2ABI}__ and `functionName` set to `"getEndedAuctions"`.
+ */
+export function useTokenizedVickeryAuctionV2GetEndedAuctions<
+  TFunctionName extends 'getEndedAuctions',
+  TSelectData = ReadContractResult<
+    typeof tokenizedVickeryAuctionV2ABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenizedVickeryAuctionV2ABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenizedVickeryAuctionV2ABI,
+    functionName: 'getEndedAuctions',
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenizedVickeryAuctionV2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenizedVickeryAuctionV2ABI}__.
  */
 export function useTokenizedVickeryAuctionV2Write<
@@ -10331,6 +10504,25 @@ export function useTokenizedVickeryAuctionV2AuctionEndedEvent(
   } as UseContractEventConfig<
     typeof tokenizedVickeryAuctionV2ABI,
     'AuctionEnded'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link tokenizedVickeryAuctionV2ABI}__ and `eventName` set to `"BidDetails"`.
+ */
+export function useTokenizedVickeryAuctionV2BidDetailsEvent(
+  config: Omit<
+    UseContractEventConfig<typeof tokenizedVickeryAuctionV2ABI, 'BidDetails'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: tokenizedVickeryAuctionV2ABI,
+    eventName: 'BidDetails',
+    ...config,
+  } as UseContractEventConfig<
+    typeof tokenizedVickeryAuctionV2ABI,
+    'BidDetails'
   >)
 }
 
