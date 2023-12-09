@@ -3,7 +3,7 @@ import { Form, Button, Select, DatePicker, InputNumber, Row, Col, Input, Spin, m
 import { useAccount, useContractReads, useContractWrite } from 'wagmi';
 import { address_map, BGT_CONTRACT, QBT_CONTRACT, AUCTION_CONTRACT } from '../../constants';
 import { useNavigate } from 'react-router-dom';
-
+import Web3 from 'web3';
 const { Option } = Select;
 
 const AuctionForm = () => {
@@ -16,6 +16,7 @@ const AuctionForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [submitLoading, setSubmitLoading] = useState(false);
+    const { toWei } = Web3.utils;
     const { write: writeAuction } = useContractWrite({
         ...AUCTION_CONTRACT,
         functionName: 'createAuction',
@@ -100,7 +101,7 @@ const AuctionForm = () => {
             auctionStartTimeTimestampInSeconds,
             bidPeriod,
             revealPeriod,
-            startingPrice
+            toWei(startingPrice, "ether")
         ]
         writeAuction({
             args
@@ -230,8 +231,8 @@ const AuctionForm = () => {
 
                 <Form.Item name="bidPeriod" label="Bid Period" rules={[{ required: true }]}>
                     <Select placeholder="Select bid period">
-                        <Option value={60}>60 seconds(for testing)</Option>
-                        <Option value={240}>240 seconds(for testing)</Option>
+                        {/* <Option value={60}>60 seconds(for testing)</Option> */}
+                        <Option value={300}>300 seconds(for testing)</Option>
                         <Option value={daysToTimestamp(3)}>3 Days</Option>
                         <Option value={daysToTimestamp(7)}>7 Days</Option>
                         <Option value={daysToTimestamp(30)}>1 Month</Option>
@@ -240,7 +241,8 @@ const AuctionForm = () => {
                 </Form.Item>
                 <Form.Item name="revealPeriod" label="Reveal Period" rules={[{ required: true }]}>
                     <Select placeholder="Select reveal period">
-                        <Option value={60}>60 seconds(for testing)</Option>
+                        {/* <Option value={60}>60 seconds(for testing)</Option> */}
+                        <Option value={300}>300 seconds(for testing)</Option>
                         <Option value={daysToTimestamp(3)}>3 Days</Option>
                         <Option value={daysToTimestamp(7)}>7 Days</Option>
                     </Select>

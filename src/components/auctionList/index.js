@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Badge, Space, Tooltip, Avatar, Tag, Typography } from 'antd';
+import { Table, Badge, Space, Tooltip, Avatar, Tag, Typography, message } from 'antd';
 import { useContractRead, useContractWrite } from 'wagmi'
 import { tag_address, AUCTION_CONTRACT } from '../../constants'
 import { QqOutlined } from '@ant-design/icons';
@@ -7,6 +7,7 @@ import BidModal from '../../components/bidModal';
 import RevealModal from '../../components/revealModal';
 import pic from '../../../src/random.png';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import Web3 from 'web3';
 const { Text } = Typography;
 
 export default function () {
@@ -18,20 +19,29 @@ export default function () {
     const [revealModalVisible, setRevealModalVisible] = useState(false);
     const [reservePrice, setReservePrice] = useState(0);
     const [auctionInfo, setAuctionInfo] = useState({});
+    const { fromWei } = Web3.utils;
+    const [messageApi, contextHolder] = message.useMessage();
     const { write: requestEndAuction } = useContractWrite({
         ...AUCTION_CONTRACT,
         functionName: 'endAuction',
         onSuccess(data) {
-            console.log(data)
+            showSuccess(data)
         }
     })
     const { write: requestWithdraw } = useContractWrite({
         ...AUCTION_CONTRACT,
         functionName: '',
         onSuccess(data) {
-            console.log(data)
+            // console.log(data)
         }
     })
+
+    const showSuccess = (data) => {
+        messageApi.open({
+            type: 'success',
+            content: `The Transacation hash is ${data.hash}`
+        });
+    }
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -311,10 +321,10 @@ export default function () {
             title: 'Highest Bid',
             dataIndex: 'highestBid',
             key: 'highestBid',
-            render: (value,record) =>  {
-                if(record.highestBidder === '0x0000000000000000000000000000000000000000') {
+            render: (value, record) => {
+                if (record.highestBidder === '0x0000000000000000000000000000000000000000') {
                     return <Tag color="red">No highest Bid</Tag>;
-                }else{
+                } else {
                     return `${value.toFixed(2)}`;
                 }
             }
@@ -323,10 +333,10 @@ export default function () {
             title: 'Second Highest Bid',
             dataIndex: 'secondHighestBid',
             key: 'secondHighestBid',
-            render: (value,record) =>  {
-                if(record.highestBidder === '0x0000000000000000000000000000000000000000') {
+            render: (value, record) => {
+                if (record.highestBidder === '0x0000000000000000000000000000000000000000') {
                     return <Tag color="red">No second highest Bid</Tag>;
-                }else{
+                } else {
                     return `${value.toFixed(2)}`;
                 }
             }
@@ -399,14 +409,13 @@ export default function () {
                 return;
             }
             const formattedData = data.map((auction, index) => {
-                const highestBid = Number(auction.highestBid);
+                const highestBid = parseFloat(Number(fromWei(auction.highestBid, "ether")));
                 const indexNumber = Number(auction.index);
                 const numUnrevealedBids = Number(auction.numUnrevealedBids);
-                const secondHighestBid = Number(auction.secondHighestBid);
-                const reservePrice = Number(auction.reservePrice);
+                const secondHighestBid = parseFloat(Number(fromWei(auction.secondHighestBid, "ether")));
+                const reservePrice = parseFloat(Number(fromWei(auction.reservePrice, "ether")));
                 const nftId = Number(auction.nftId);
                 const numBids = Number(auction.numBids);
-                const currentTime = Math.floor(Date.now() / 1000);
                 return {
                     ...auction,
                     highestBid,
@@ -419,7 +428,6 @@ export default function () {
                     key: index + 1
                 };
             });
-            // console.log(formattedData)
             setEndedAuctionData(formattedData);
             setEndedLoading(false);
         }
@@ -436,7 +444,7 @@ export default function () {
                 const indexNumber = Number(auction.index);
                 const numUnrevealedBids = Number(auction.numUnrevealedBids);
                 const secondHighestBid = Number(auction.secondHighestBid);
-                const reservePrice = Number(auction.reservePrice);
+                const reservePrice = parseFloat(Number(fromWei(auction.reservePrice, "ether")));
                 const nftId = Number(auction.nftId);
                 const numBids = Number(auction.numBids);
                 const currentTime = Math.floor(Date.now() / 1000);
@@ -454,7 +462,7 @@ export default function () {
                     timeUntilAuctionEnds: Math.max(0, auction.endOfRevealPeriod - currentTime)
                 };
             });
-            console.log(formattedData)
+            // console.log(formattedData)
             setTableData(formattedData);
             setLoading(false);
         }
@@ -515,6 +523,7 @@ export default function () {
     );
     return (
         <div>
+            {contextHolder}
             <ActiveAuctionsTable />
             <EndedAuctionsTable />
             {

@@ -7,13 +7,16 @@ import { ethers } from 'ethers';
 import Web3 from 'web3';
 
 const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
+    const { toWei, fromWei } = Web3.utils;
     const [bidPrice, setBidPrice] = useState(0.01); // 初始化为最小值
     const [nonce, setNonce] = useState('');
     const [foundRecord, setFoundRecord] = useState(false);
     const [commitment, setCommitment] = useState('');
     const [transacationHash, setTransacationHash] = useState('');
     const [pastPrice, setPastPrice] = useState('');
-    const { toWei, fromWei } = Web3.utils;
+    const [displayHighestBid, setDisplayHighestBid] = useState(fromWei(auctionInfo.highestBid, "ether"));
+    const [displaySecondBid, setDisplaySecondBid] = useState(fromWei(auctionInfo.secondHighestBid, "ether"));
+    const [isHighestBidder, setIsHighestBidder] = useState(false);
     const { Text } = Typography;
     const { address } = useAccount();
     // const c = generateCommitment(
@@ -30,6 +33,9 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
             setFoundRecord(true);
             setTransacationHash(data.hash);
             message.success(`Bid record found!`);
+        },
+        onError(error) {
+            message.error(error);
         }
     })
     useContractRead({
@@ -57,18 +63,20 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
                 const args = [
                     auctionInfo.nftType,
                     ethers.BigNumber.from(auctionInfo.nftId).toString(), // tokenId, 转换为字符串
-                    ethers.utils.parseUnits(bidPrice+"", "ether").toString(),
+                    ethers.utils.parseUnits(bidPrice + "", "ether").toString(),
                     nonceBytes32
                 ];
-                revealBid({ args })
-            } else {
-                setFoundRecord(false);
-                message.error('Nonce is incorrect, please retry.');
+                revealBid({ args });
+                if (bidPrice > displayHighestBid) {
+                    setDisplayHighestBid(bidPrice);
+                } else if (bidPrice > displaySecondBid) {
+                    setDisplaySecondBid(bidPrice);
+                }
+                return; 
             }
-        } else {
-            setFoundRecord(false);
-            message.error('Nonce is incorrect, please retry.');
         }
+        setFoundRecord(false);
+        message.error('Nonce is incorrect, please retry.');
     };
     const modalFooterButtons = foundRecord ? (
         <Button key="close" onClick={onClose}>
@@ -79,7 +87,6 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
             Reveal
         </Button>
     );
-    console.log(auctionInfo)
     return (
         <Modal
             title="Reveal Your Bid"
@@ -121,10 +128,10 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
                         )}
                     </div>
                     <div style={{'lineHeight': '32px'}}>
-                        <Text strong>Current Highest Bid: </Text><Tag color='blue'> {auctionInfo.highestBid} LKT</Tag>
+                        <Text strong>Current Highest Bid: </Text><Tag color='blue'> {displayHighestBid} LKT</Tag>
                     </div>
                     <div>
-                        <Text strong>Second Highest Bid: </Text><Tag color='blue'>{auctionInfo.secondHighestBid} LKT</Tag> 
+                        <Text strong>Second Highest Bid: </Text><Tag color='blue'>{displaySecondBid} LKT</Tag> 
                     </div>
                     <Divider />
                     <div>

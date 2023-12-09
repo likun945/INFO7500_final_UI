@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, InputNumber, Button, message, Select, Option } from 'antd';
+import { Modal, Form, InputNumber, Button, message, Select, Input } from 'antd';
 import { useSignMessage, useContractWrite } from 'wagmi'
 // import { verifyMessage } from 'ethers';
 import { LKT_CONTRACT, AUCTION_CONTRACT, address_map } from '../../constants';
@@ -25,11 +25,11 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
     const [payment, setPayment] = useState(0);
     const { auction_address } = address_map;
     const { toWei } = Web3.utils;
-    const nounce = "test";
+    const [nonce, setNonce] = useState("test");
 
     const localGenerateCommitment = () => {
         const commitment = generateCommitment(
-            nounce,
+            nonce,
             toWei(bidPrice, "ether"),
             auctionInfo.nftType, 
             auctionInfo.nftId, 
@@ -96,7 +96,7 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
 
     const showBidMessage = (commitment) => {
         messageApi.success({
-            content: `Bid successful! Your nonce is ${nounce}. Please keep it safe. Commitment : (${commitment})`,
+            content: `Bid successful! Your nonce is ${nonce}. Please keep it safe. Commitment : (${commitment})`,
             duration: 5
         });
     };
@@ -114,7 +114,6 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
                 result_commitment,
                 toWei(bidPrice, "ether")
             ]
-            console.log(args);
             commitBid({ args })
         } else {
             console.error('error');
@@ -147,6 +146,10 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
                             ))
                         }
                     </Select>
+                </Form.Item>
+                <Form.Item>
+                    <Input disabled value={nonce}>
+                    </Input>
                 </Form.Item>
                 <Form.Item label={`Bid Price (min: ${reservePrice})`}>
                     <InputNumber
