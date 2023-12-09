@@ -53,6 +53,13 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
             setTimeout(() => {
                 onClose();
             },3000)
+        },
+        onError(error) {
+            messageApi.open({
+                type: 'error',
+                content: error.shortMessage,
+                duration: 5
+            });
         }
     })
     const { write: approve } = useContractWrite({
@@ -117,8 +124,6 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
                 toWei(bidPrice, "ether")
             ]
             commitBid({ args })
-        } else {
-            console.error('error');
         }
     }
     useEffect(() => {

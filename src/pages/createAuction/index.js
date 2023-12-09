@@ -6,6 +6,30 @@ import { useNavigate } from 'react-router-dom';
 import Web3 from 'web3';
 const { Option } = Select;
 
+const disabledDate = (current) => {
+    // 禁用当前日期之前的所有日期
+    return current && current.valueOf() < Date.now();
+};
+
+const disabledDateTime = () => {
+    const now = new Date();
+    let disabledHours = () => range(0, 24).splice(0, now.getHours());
+    let disabledMinutes = () => range(0, 60).splice(0, now.getMinutes() + 2);
+
+    return {
+        disabledHours,
+        disabledMinutes
+    };
+};
+
+const range = (start, end) => {
+    const result = [];
+    for (let i = start; i < end; i++) {
+        result.push(i);
+    }
+    return result;
+};
+
 const AuctionForm = () => {
     const [form] = Form.useForm();
     const { token_address, QBT_address, BGT_address, auction_address } = address_map;
@@ -231,7 +255,17 @@ const AuctionForm = () => {
                 </Form.Item>
 
                 <Form.Item name="auctionStartTime" label="Auction Start Time" rules={[{ required: true }]}>
-                    <DatePicker showTime />
+                    <DatePicker
+                        showTime={{ format: 'HH:mm' }}
+                        format="YYYY-MM-DD HH:mm"
+                        disabledDate={disabledDate}
+                        disabledTime={disabledDateTime}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <div>
+                        <strong>Notice:</strong> Please select a future time for the auction start to ensure it begins after the form submission.
+                    </div>
                 </Form.Item>
 
                 <Form.Item name="bidPeriod" label="Bid Period" rules={[{ required: true }]}>
@@ -260,9 +294,9 @@ const AuctionForm = () => {
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 6 }}>
                     <Space>
                         <Spin spinning={submitLoading}>
-                        <Button type="primary" htmlType="submit">
-                            Create Auction
-                        </Button>
+                            <Button type="primary" htmlType="submit">
+                                Create Auction
+                            </Button>
                         </Spin>
                         <Button onClick={handleBack}>Back Home</Button>
                     </Space>

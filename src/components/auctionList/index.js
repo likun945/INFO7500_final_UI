@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Badge, Space, Tooltip, Avatar, Tag, Typography, message } from 'antd';
+import { Table, Badge, Space, Tooltip, Avatar, Tag, Typography, message, Button } from 'antd';
 import { useContractRead, useContractWrite } from 'wagmi'
 import { tag_address, AUCTION_CONTRACT } from '../../constants'
 import { QqOutlined } from '@ant-design/icons';
@@ -63,13 +63,13 @@ export default function () {
 
     const handleClose = () => {
         setIsModalVisible(false);
-        window.location.reload(); 
     };
     const showRevealModal = () => {
         setRevealModalVisible(true);
     }
     const handleRevealClose = () => {
         setRevealModalVisible(false);
+        window.location.reload(); 
     }
     const handleBid = (record) => {
         setReservePrice(record.reservePrice)
@@ -271,10 +271,10 @@ export default function () {
                 }
 
                 return (
-                    <Space size="middle">
-                        <a onClick={handleBid.bind(this, record)} disabled={!isBidEnabled}>Bid</a>
-                        <a onClick={handleReveal.bind(this, record)} disabled={!isRevealEnabled}>Reveal</a>
-                        <a onClick={handleEnd.bind(this, record)} disabled={!isEndEnabled}>End</a>
+                    <Space size="small">
+                        <Button type='link' onClick={handleBid.bind(this, record)} disabled={!isBidEnabled}>Bid</Button >
+                        <Button type='link' onClick={handleReveal.bind(this, record)} disabled={!isRevealEnabled}>Reveal</Button>
+                        <Button type='link' onClick={handleEnd.bind(this, record)} disabled={!isEndEnabled}>End</Button>
                     </Space>
                 );
             },

@@ -73,7 +73,7 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
         message.error('Nonce is incorrect, please retry.');
     };
     const decideWinner = () => {
-        if (bidPrice > displayHighestBid) {
+        if (bidPrice > displayHighestBid || (auctionInfo.highestBidder === '0x0000000000000000000000000000000000000000' && bidPrice >= displayHighestBid)) {
             setDisplayHighestBid(bidPrice);
             setIsHighestBidder(address);
             return;
