@@ -2402,6 +2402,7 @@ export const tokenizedVickeryAuctionABI = [
     outputs: [
       { name: 'commitment', internalType: 'bytes20', type: 'bytes20' },
       { name: 'collateral', internalType: 'uint96', type: 'uint96' },
+      { name: 'isRevealed', internalType: 'bool', type: 'bool' },
     ],
   },
   {

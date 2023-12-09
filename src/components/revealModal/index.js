@@ -17,15 +17,9 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
     const [displayHighestBid, setDisplayHighestBid] = useState(fromWei(auctionInfo.highestBid, "ether"));
     const [displaySecondBid, setDisplaySecondBid] = useState(fromWei(auctionInfo.secondHighestBid, "ether"));
     const [isHighestBidder, setIsHighestBidder] = useState(false);
+    const [isRevealed, setIsRevealed] = useState(false);
     const { Text } = Typography;
     const { address } = useAccount();
-    // const c = generateCommitment(
-    //     "test",
-    //     toWei(5, "ether"),
-    //     "0x2f698cb14d8150785accbed9d9544999631ec0df",
-    //     10,
-    //     1
-    // )
     const { write: revealBid } = useContractWrite({
         ...AUCTION_CONTRACT,
         functionName: 'revealBid',
@@ -48,8 +42,12 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
             address
         ],
         onSuccess(data) {
-            if (data && data.length === 2) {
+            if (data && data.length === 3) {
                 data[1] = Number(fromWei(data[1], "ether"))
+            }
+            setIsRevealed(data[2]);
+            if (data[2]) {
+                setFoundRecord(true);
             }
             setCommitment(data[0]);
             setPastPrice(data[1]);
@@ -67,17 +65,23 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
                     nonceBytes32
                 ];
                 revealBid({ args });
-                if (bidPrice > displayHighestBid) {
-                    setDisplayHighestBid(bidPrice);
-                } else if (bidPrice > displaySecondBid) {
-                    setDisplaySecondBid(bidPrice);
-                }
-                return; 
+                decideWinner();
+                return;
             }
         }
         setFoundRecord(false);
         message.error('Nonce is incorrect, please retry.');
     };
+    const decideWinner = () => {
+        if (bidPrice > displayHighestBid) {
+            setDisplayHighestBid(bidPrice);
+            setIsHighestBidder(address);
+            return;
+        } 
+        else if (bidPrice > displaySecondBid) {
+            setDisplaySecondBid(bidPrice);
+        }
+    }
     const modalFooterButtons = foundRecord ? (
         <Button key="close" onClick={onClose}>
             Close
@@ -94,7 +98,7 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
             onCancel={onClose}
             footer={[modalFooterButtons]}
         >
-            {!foundRecord && (
+            {!foundRecord && !isRevealed && (
                 <Form layout="vertical">
                     <Form.Item label="NFT Type">
                         <Input value={auctionInfo.nftType} disabled />
@@ -121,25 +125,28 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
                     <Divider />
                     <div>
                         <Text strong>Current Highest Bidder: </Text>
-                        {address === auctionInfo.highestBidder ? (
+                        {address === auctionInfo.highestBidder || isHighestBidder ? (
                             <Text strong style={{ color: 'green' }}>It's you</Text>
                         ) : (
                             <Text copyable>{auctionInfo.highestBidder}</Text>
                         )}
                     </div>
-                    <div style={{'lineHeight': '32px'}}>
+                    <div style={{ 'lineHeight': '32px' }}>
                         <Text strong>Current Highest Bid: </Text><Tag color='blue'> {displayHighestBid} LKT</Tag>
                     </div>
                     <div>
-                        <Text strong>Second Highest Bid: </Text><Tag color='blue'>{displaySecondBid} LKT</Tag> 
+                        <Text strong>Second Highest Bid: </Text><Tag color='blue'>{displaySecondBid} LKT</Tag>
                     </div>
                     <Divider />
                     <div>
                         <Text strong>Original Commitment:</Text> <Text copyable>{commitment}</Text>
                     </div>
-                    <div>
-                        <Text strong>Transaction Hash:</Text> <Text copyable>{transacationHash}</Text>
-                    </div>
+                    {
+                        transacationHash &&
+                        <div>
+                            <Text strong>Transaction Hash:</Text> <Text copyable>{transacationHash}</Text>
+                        </div>
+                    }
                     <div>
                         <Text strong>Bid Amount: </Text> <Tag color='blue'>{pastPrice} LKT</Tag>
                     </div>

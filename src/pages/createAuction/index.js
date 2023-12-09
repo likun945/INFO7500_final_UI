@@ -215,6 +215,11 @@ const AuctionForm = () => {
                         </Col>
                     </Row>
                 </Spin>
+                <Form.Item>
+                    <div>
+                        <strong>Notice:</strong> Please ensure to complete the "approve transfer" transaction in your wallet before submitting this form.
+                    </div>
+                </Form.Item>
                 <Form.Item
                     name="erc20ContractAddress"
                     label="ERC20 Token"
@@ -242,7 +247,7 @@ const AuctionForm = () => {
                 <Form.Item name="revealPeriod" label="Reveal Period" rules={[{ required: true }]}>
                     <Select placeholder="Select reveal period">
                         {/* <Option value={60}>60 seconds(for testing)</Option> */}
-                        <Option value={300}>300 seconds(for testing)</Option>
+                        <Option value={600}>600 seconds(for testing)</Option>
                         <Option value={daysToTimestamp(3)}>3 Days</Option>
                         <Option value={daysToTimestamp(7)}>7 Days</Option>
                     </Select>

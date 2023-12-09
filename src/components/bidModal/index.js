@@ -31,8 +31,8 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
         const commitment = generateCommitment(
             nonce,
             toWei(bidPrice, "ether"),
-            auctionInfo.nftType, 
-            auctionInfo.nftId, 
+            auctionInfo.nftType,
+            auctionInfo.nftId,
             auctionInfo.index
         )
         setCommitment(commitment);
@@ -50,7 +50,9 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
         onSuccess(data) {
             showSuccess(data)
             showBidMessage(commitment);
-            onClose();
+            setTimeout(() => {
+                onClose();
+            },3000)
         }
     })
     const { write: approve } = useContractWrite({
@@ -147,7 +149,7 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
                         }
                     </Select>
                 </Form.Item>
-                <Form.Item>
+                <Form.Item label={'Nonce'}>
                     <Input disabled value={nonce}>
                     </Input>
                 </Form.Item>
@@ -163,6 +165,9 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
                 </Form.Item>
                 <Form.Item>
                     <b>Deposit Required</b><span>: {bidPrice}</span>
+                    <div>
+                        <strong>Notice:</strong> Please ensure to complete the "approve transfer" transaction in your wallet before submitting this form.
+                    </div>
                 </Form.Item>
             </Form>
         </Modal>

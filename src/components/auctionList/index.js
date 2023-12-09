@@ -26,20 +26,35 @@ export default function () {
         functionName: 'endAuction',
         onSuccess(data) {
             showSuccess(data)
+        },
+        onError(error) {
+            messageApi.open({
+                type: 'error',
+                content: error.shortMessage,
+                duration: 5
+            });
         }
     })
     const { write: requestWithdraw } = useContractWrite({
         ...AUCTION_CONTRACT,
-        functionName: '',
+        functionName: 'withdrawCollateral',
         onSuccess(data) {
-            // console.log(data)
+            showSuccess(data);
+        },
+        onError(error) {
+            messageApi.open({
+                type: 'error',
+                content: error.shortMessage,
+                duration: 5
+            });
         }
     })
 
     const showSuccess = (data) => {
         messageApi.open({
             type: 'success',
-            content: `The Transacation hash is ${data.hash}`
+            content: `The Transacation hash is ${data.hash}`,
+            duration: 5
         });
     }
     const showModal = () => {
@@ -48,6 +63,7 @@ export default function () {
 
     const handleClose = () => {
         setIsModalVisible(false);
+        window.location.reload(); 
     };
     const showRevealModal = () => {
         setRevealModalVisible(true);
@@ -71,6 +87,15 @@ export default function () {
             nftId
         ]
         requestEndAuction({ args })
+    }
+    const handleWithdraw = (record) => {
+        const { nftType, nftId, index } = record;
+        const args = [
+            nftType,
+            nftId,
+            index
+        ]
+        requestWithdraw({ args })
     }
     const formatAddress = (addr) => {
         if (!addr) {
@@ -396,7 +421,7 @@ export default function () {
             title: 'Action',
             render: (text, record, index) => {
                 return <Space size="middle">
-                    <a onClick={handleBid.bind(this, record)}>Withdraw</a>
+                    <a onClick={handleWithdraw.bind(this, record)}>Withdraw</a>
                 </Space>
             }
         }

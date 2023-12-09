@@ -3,8 +3,7 @@ const LKT_address = '0x40CA1cd6482790f79b4bd862070Ef1236274625F';
 const QBT_address = '0x2f698CB14D8150785AcCbEd9d9544999631ec0dF';
 const BGT_address = '0xab9b88e591AE6Df69F9B0765d83112814e22Ed05';
 export const address_map = {
-    // auction_address: '0x8cA893Ac9B8a6BA09b358bB23324ABE592e1f022',
-    auction_address: '0x5eB55b19f5F0bf31622f5f28327Ab1f74E4E2658',
+    auction_address: '0xdA31e60FE7886E6026C288b1e5b43cda7ED2A59F',
     QBT_address,
     BGT_address,
     token_address: LKT_address,
