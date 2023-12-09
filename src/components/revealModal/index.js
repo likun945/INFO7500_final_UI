@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, InputNumber, Button, message, Typography, Tag, Divider, Badge } from 'antd';
+import { Modal, Form, Input, InputNumber, Button, message, Typography, Tag, Divider } from 'antd';
 import { generateCommitment } from '../../utils';
 import { useContractWrite, useContractRead, useAccount } from 'wagmi';
 import { AUCTION_CONTRACT } from '../../constants';
@@ -23,7 +23,6 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
     //     10,
     //     1
     // )
-    // console.log(c)
     const { write: revealBid } = useContractWrite({
         ...AUCTION_CONTRACT,
         functionName: 'revealBid',
@@ -58,10 +57,13 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
                 const args = [
                     auctionInfo.nftType,
                     ethers.BigNumber.from(auctionInfo.nftId).toString(), // tokenId, 转换为字符串
-                    ethers.utils.parseUnits("5", "ether").toString(),
+                    ethers.utils.parseUnits(bidPrice+"", "ether").toString(),
                     nonceBytes32
                 ];
                 revealBid({ args })
+            } else {
+                setFoundRecord(false);
+                message.error('Nonce is incorrect, please retry.');
             }
         } else {
             setFoundRecord(false);
@@ -77,6 +79,7 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
             Reveal
         </Button>
     );
+    console.log(auctionInfo)
     return (
         <Modal
             title="Reveal Your Bid"
@@ -118,10 +121,10 @@ const RevealBidModal = ({ isVisible, onClose, auctionInfo }) => {
                         )}
                     </div>
                     <div style={{'lineHeight': '32px'}}>
-                        <Text strong>Current Highest Bid: </Text><Tag color='blue'> {fromWei(auctionInfo.highestBid, "ether")} LKT</Tag>
+                        <Text strong>Current Highest Bid: </Text><Tag color='blue'> {auctionInfo.highestBid} LKT</Tag>
                     </div>
                     <div>
-                        <Text strong>Second Highest Bid: </Text><Tag color='blue'>{fromWei(auctionInfo.secondHighestBid, "ether")} LKT</Tag> 
+                        <Text strong>Second Highest Bid: </Text><Tag color='blue'>{auctionInfo.secondHighestBid} LKT</Tag> 
                     </div>
                     <Divider />
                     <div>

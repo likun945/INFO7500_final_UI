@@ -114,7 +114,7 @@ const BidModal = ({ isModalVisible, onClose, reservePrice, auctionInfo }) => {
                 result_commitment,
                 toWei(bidPrice, "ether")
             ]
-            // console.log(args);
+            console.log(args);
             commitBid({ args })
         } else {
             console.error('error');

@@ -25,6 +25,13 @@ export default function () {
             console.log(data)
         }
     })
+    const { write: requestWithdraw } = useContractWrite({
+        ...AUCTION_CONTRACT,
+        functionName: '',
+        onSuccess(data) {
+            console.log(data)
+        }
+    })
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -73,7 +80,9 @@ export default function () {
             key: 'seller',
             render: (text, record) => {
                 return (
-                    <Tooltip title={text}>{formatAddress(text)}</Tooltip>
+                    <Tooltip title={text}>
+                        {formatAddress(text)}
+                    </Tooltip>
                 )
             }
         },
@@ -124,7 +133,8 @@ export default function () {
         {
             title: 'Reserve Price',
             dataIndex: 'reservePrice',
-            key: 'reservePrice'
+            key: 'reservePrice',
+            render: (value) => `${value.toFixed(2)}`
         },
         {
             title: 'Auction Start time',
@@ -203,7 +213,6 @@ export default function () {
             render: (text, record, index) => {
                 const currentTime = Math.floor(Date.now() / 1000);
                 let isBidEnabled, isRevealEnabled, isEndEnabled;
-
                 if (currentTime < record.startTime) {
                     // 拍卖未开始
                     isBidEnabled = false;
@@ -410,8 +419,8 @@ export default function () {
                     key: index + 1
                 };
             });
+            // console.log(formattedData)
             setEndedAuctionData(formattedData);
-            console.log(formattedData)
             setEndedLoading(false);
         }
     })
@@ -445,6 +454,7 @@ export default function () {
                     timeUntilAuctionEnds: Math.max(0, auction.endOfRevealPeriod - currentTime)
                 };
             });
+            console.log(formattedData)
             setTableData(formattedData);
             setLoading(false);
         }
