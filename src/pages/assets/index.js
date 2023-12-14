@@ -3,9 +3,9 @@ import { Button, Statistic, Spin, List, Image, Col, Segmented, Row, Avatar } fro
 import Web3 from 'web3';
 import { useContractRead, useAccount } from 'wagmi'
 import { mockErc20ABI, boardGameNftABI, mockErc721ABI } from '../../generated';
-import { address_map, generate_qbt_img } from '../../constants'
-import { QqOutlined } from '@ant-design/icons';
+import { address_map, generate_qbt_img, generate_bgt_img } from '../../constants';
 import pic from '../../../src/random.png';
+import animal from '../../../src/animal.png';
 import { useNavigate } from 'react-router-dom';
 
 export default function Assets() {
@@ -95,6 +95,7 @@ export default function Assets() {
                     </Col>
                 </Row>
             </Spin>
+            
             <Row>
                 <Col span={16} offset={3}>
                     <Segmented
@@ -104,7 +105,7 @@ export default function Assets() {
                             {
                                 label: (
                                     <div style={{ padding: 4 }}>
-                                        <Avatar style={{ backgroundColor: '#87d068' }} icon={<QqOutlined />} />
+                                        <Avatar src={animal} />
                                         <div>QBT</div>
                                     </div>
                                 ),
@@ -138,7 +139,7 @@ export default function Assets() {
                                         height={200}
                                         src={
                                         currentList === 'bgt'?
-                                        `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`:
+                                        generate_bgt_img(item):
                                         generate_qbt_img(item)
                                     } />}
                                 />

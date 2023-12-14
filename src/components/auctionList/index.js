@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Table, Badge, Space, Tooltip, Avatar, Tag, Typography, message, Button } from 'antd';
 import { useContractRead, useContractWrite } from 'wagmi'
 import { tag_address, AUCTION_CONTRACT } from '../../constants'
-import { QqOutlined } from '@ant-design/icons';
 import BidModal from '../../components/bidModal';
 import RevealModal from '../../components/revealModal';
 import pic from '../../../src/random.png';
+import animal from '../../../src/animal.png';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import Web3 from 'web3';
 const { Text } = Typography;
@@ -138,7 +138,7 @@ export default function () {
                     <Space>
                         {
                             tokenName === 'QBT' ?
-                                <Avatar size="small" icon={<QqOutlined />} /> :
+                                <Avatar size="small" src={animal} /> :
                                 <Avatar size="small" src={pic} />
                         }
                         <span>{tokenName}</span>
@@ -318,7 +318,7 @@ export default function () {
                     <Space>
                         {
                             tokenName === 'QBT' ?
-                                <Avatar size="small" icon={<QqOutlined />} /> :
+                                <Avatar size="small" src={animal} /> :
                                 <Avatar size="small" src={pic} />
                         }
                         <span>{tokenName}</span>

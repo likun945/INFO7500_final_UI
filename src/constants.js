@@ -2,7 +2,7 @@ import { boardGameNftABI, mockErc721ABI, tokenizedVickeryAuctionABI, mockErc20AB
 const LKT_address = '0x40CA1cd6482790f79b4bd862070Ef1236274625F';
 // const QBT_address = '0x2f698CB14D8150785AcCbEd9d9544999631ec0dF';
 const QBT_address = '0x6b38F52Df3e78D19007A41fC63F0992031935dc1'; //ANT
-const BGT_address = '0xab9b88e591AE6Df69F9B0765d83112814e22Ed05';
+const BGT_address = '0x0aC7D1c557F013F0718646f1792763892f115d2d';
 export const address_map = {
     auction_address: '0xD63E6c887691736977b0bb8a8fb71015cc4AF6B4',
     QBT_address,
@@ -40,4 +40,9 @@ export const QBT_IMG_URL = 'https://firebasestorage.googleapis.com/v0/b/planar-h
 
 export function generate_qbt_img(token_id) {
     return QBT_IMG_URL.concat(`${token_id}.jpg?alt=media`);
+}
+export const BGT_IMG_URL = 'https://firebasestorage.googleapis.com/v0/b/planar-hangout-366503.appspot.com/o/bgt_image%2F';
+
+export function generate_bgt_img(token_id) {
+    return BGT_IMG_URL.concat(`${token_id}.png?alt=media`);
 }
