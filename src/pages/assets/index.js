@@ -3,7 +3,7 @@ import { Button, Statistic, Spin, List, Image, Col, Segmented, Row, Avatar } fro
 import Web3 from 'web3';
 import { useContractRead, useAccount } from 'wagmi'
 import { mockErc20ABI, boardGameNftABI, mockErc721ABI } from '../../generated';
-import { address_map } from '../../constants'
+import { address_map, generate_qbt_img } from '../../constants'
 import { QqOutlined } from '@ant-design/icons';
 import pic from '../../../src/random.png';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ export default function Assets() {
     const { token_address, BGT_address, QBT_address } = address_map;
     const { address } = useAccount();
     const navigate = useNavigate();
+    const base_url = "https://testnets.opensea.io/assets/sepolia";
     const { isLoading } = useContractRead({
         address: token_address,
         abi: mockErc20ABI,
@@ -45,6 +46,7 @@ export default function Assets() {
             console.log(error);
         }
     })
+    console.log(qbAsset)
     useContractRead({
         address: QBT_address,
         abi: mockErc721ABI,
@@ -130,8 +132,15 @@ export default function Assets() {
                         renderItem={(item, index) => (
                             <List.Item>
                                 <List.Item.Meta
-                                    title={<span >TokenId {item}</span>}
-                                    description={<Image src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`} />}
+                                    title={<Button type='link' onClick={() => window.open(`${base_url}/${currentList === 'bgt' ? BGT_address:QBT_address}/${item}`, '_blank')}>TokenId {item}</Button>}
+                                    description={<Image 
+                                        width={200}
+                                        height={200}
+                                        src={
+                                        currentList === 'bgt'?
+                                        `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`:
+                                        generate_qbt_img(item)
+                                    } />}
                                 />
                             </List.Item>
                         )}

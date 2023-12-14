@@ -1,13 +1,12 @@
 import { boardGameNftABI, mockErc721ABI, tokenizedVickeryAuctionABI, mockErc20ABI } from './generated';
 const LKT_address = '0x40CA1cd6482790f79b4bd862070Ef1236274625F';
-const QBT_address = '0x2f698CB14D8150785AcCbEd9d9544999631ec0dF';
-const ANT_address = '0x6b38F52Df3e78D19007A41fC63F0992031935dc1';
+// const QBT_address = '0x2f698CB14D8150785AcCbEd9d9544999631ec0dF';
+const QBT_address = '0x6b38F52Df3e78D19007A41fC63F0992031935dc1'; //ANT
 const BGT_address = '0xab9b88e591AE6Df69F9B0765d83112814e22Ed05';
 export const address_map = {
-    auction_address: '0xdA31e60FE7886E6026C288b1e5b43cda7ED2A59F',
-    QBT_address: ANT_address,
+    auction_address: '0xD63E6c887691736977b0bb8a8fb71015cc4AF6B4',
+    QBT_address,
     BGT_address,
-    // ANT_address,
     token_address: LKT_address,
     user_address: '0x94d3130C53288921Cd620b00f1e6Fd95aA8ACF2d'
 }
@@ -35,4 +34,10 @@ export const BGT_CONTRACT = {
 export const QBT_CONTRACT = {
     address: QBT_address,
     abi: mockErc721ABI,
+}
+
+export const QBT_IMG_URL = 'https://firebasestorage.googleapis.com/v0/b/planar-hangout-366503.appspot.com/o/image%2F';
+
+export function generate_qbt_img(token_id) {
+    return QBT_IMG_URL.concat(`${token_id}.jpg?alt=media`);
 }

@@ -21,6 +21,7 @@ export default function () {
     const [auctionInfo, setAuctionInfo] = useState({});
     const { fromWei } = Web3.utils;
     const [messageApi, contextHolder] = message.useMessage();
+    const base_url = "https://testnets.opensea.io/assets/sepolia";
     const { write: requestEndAuction } = useContractWrite({
         ...AUCTION_CONTRACT,
         functionName: 'endAuction',
@@ -148,7 +149,12 @@ export default function () {
         {
             title: 'Token ID',
             dataIndex: 'nftId',
-            key: 'nftId'
+            key: 'nftId',
+            render: (text, record) => {
+                return (
+                    <Button type="link" onClick={() => window.open(`${base_url}/${record.nftType}/${record.nftId}`, '_blank')}>{text}</Button>
+                )
+            }
         },
         {
             title: 'Payment Token',
@@ -323,7 +329,13 @@ export default function () {
         {
             title: 'Token ID',
             dataIndex: 'nftId',
-            key: 'nftId'
+            key: 'nftId',
+            width:100,
+            render: (text, record) => {
+                return (
+                    <Button type="link" onClick={() => window.open(`${base_url}/${record.nftType}/${record.nftId}`, '_blank')}>{text}</Button>
+                )
+            }
         },
         {
             title: 'Highest Bidder',
